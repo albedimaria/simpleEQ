@@ -1,0 +1,15 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskLabel": "attività-SimpleEQ_StandalonePlugin.vcxproj",
+      "appliesTo": "Builds/VisualStudio2022/SimpleEQ_StandalonePlugin.vcxproj.user",
+      "type": "launch"
+    },
+    {
+      "taskLabel": "attività-SimpleEQ_StandalonePlugin",
+      "appliesTo": "Builds/VisualStudio2022/SimpleEQ_StandalonePlugin.vcxproj",
+      "type": "msbuild"
+    }
+  ]
+}
