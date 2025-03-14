@@ -89,6 +89,16 @@ void SimpleEQAudioProcessorEditor::paint (juce::Graphics& g)
 
 	responseCurve.startNewSubPath(responseArea.getX(), map(mags.front()));
 
+	for (size_t i = 1; i < mags.size(); ++i)
+	{
+		responseCurve.lineTo(responseArea.getX() + i, map(mags[i]));
+	}
+
+	g.setColour(Colours::orange);
+	g.drawRoundedRectangle(responseArea.toFloat(), 4.f, 1.f);
+
+	g.setColour(Colours::white);
+	g.strokePath(responseCurve, PathStrokeType(2.f));
 }
 
 void SimpleEQAudioProcessorEditor::resized()
@@ -112,6 +122,33 @@ void SimpleEQAudioProcessorEditor::resized()
 	peakGainSlider.setBounds(bounds.removeFromTop(bounds.getHeight() * 0.5));
 	peakFreqSlider.setBounds(bounds);
 }
+
+void SimpleEQAudioProcessorEditor::parameterValueChanged(int parameterIndex, float newValue)
+{
+	parametersChanged.set(true);
+}
+
+void SimpleEQAudioProcessorEditor::timerCallback()
+{
+	if (parametersChanged.compareAndSetBool(false, true))
+	{
+		// update the mono chain
+		// signal a repaint
+		
+		// monoChain.setBypassed<ChainPositions::LowCut>(audioProcessor.apvts.getRawParameterValue("LowCut Bypass")->load());
+		// monoChain.setBypassed<ChainPositions::Peak>(audioProcessor.apvts.getRawParameterValue("Peak Bypass")->load());
+		// monoChain.setBypassed<ChainPositions::HighCut>(audioProcessor.apvts.getRawParameterValue("HighCut Bypass")->load());
+		// auto peakCoefficients = makePeakFilter(audioProcessor.apvts);
+		// updateCoefficients(monoChain.get<ChainPositions::Peak>(), peakCoefficients);
+		// auto lowCutCoefficients = makeLowCutFilter(audioProcessor.apvts);
+		// auto highCutCoefficients = makeHighCutFilter(audioProcessor.apvts);
+		// updateCutFilter(monoChain.get<ChainPositions::LowCut>(), lowCutCoefficients, audioProcessor.lowCutSlope);
+		// updateCutFilter(monoChain.get<ChainPositions::HighCut>(), highCutCoefficients, audioProcessor.highCutSlope);
+		// repaint();
+	}
+}
+
+
 
 std::vector<juce::Component*> SimpleEQAudioProcessorEditor::getComps()
 {
