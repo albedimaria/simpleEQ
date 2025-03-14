@@ -41,7 +41,7 @@ enum ChainPositions
 };
 
 using Coefficients = Filter::CoefficientsPtr;
-static void updateCoefficients(Coefficients& old, const Coefficients& replacements);
+void updateCoefficients(Coefficients& old, const Coefficients& replacements);
 
 Coefficients makePeakFilter(const ChainSettings& chainSettings, double sampleRate);
 
@@ -76,13 +76,25 @@ void updateCutFilter(ChainType& chain,
     case Slope_24:
     {
         update<1>(chain, coefficients);
-    }
+    } 
     case Slope_12:
     {
         update<0>(chain, coefficients);
     }
 
     }
+}
+
+inline auto makeLowCutFilter(const ChainSettings& chainSettings, double sampleRate)
+{
+	return juce::dsp::FilterDesign<float>::designIIRHighpassHighOrderButterworthMethod(
+		chainSettings.lowCutFreq, sampleRate, 2 * (chainSettings.lowCutSlope + 1));
+}
+
+inline auto makeHighCutFilter(const ChainSettings& chainSettings, double sampleRate)
+{
+	return juce::dsp::FilterDesign<float>::designIIRLowpassHighOrderButterworthMethod(
+		chainSettings.highCutFreq, sampleRate, 2 * (chainSettings.highCutSlope + 1));
 }
 
 //==============================================================================
@@ -138,10 +150,7 @@ private:
     MonoChain leftChain, rightChain;
 
 	void updatePeakFilter(const ChainSettings& chainSettings);
-	
 
-    
-		
 	void updateLowCutFilters(const ChainSettings& chainSettings);
 	void updateHighCutFilters(const ChainSettings& chainSettings);
 
